@@ -835,48 +835,78 @@ $(window).on("load", function () {
     -----------------------------  Contact Valdition   -----------------------------
     ============================================================================= */
 
-  $("#contact-form").validator();
+  /* ============================{  JQuery AJAX   }========================== */
 
-  $("#contact-form").on("submit", function (e) {
-    if (!e.isDefaultPrevented()) {
-      e.preventDefault(); // stop default submission
+  // $("#contact-form").validator();
 
-      // Serialize form data for Netlify
-      var formData = $(this).serializeArray();
-      formData.push({ name: "form-name", value: "contact" }); // Netlify hidden input replacement
+  // $("#contact-form").on("submit", function (e) {
+  //   if (!e.isDefaultPrevented()) {
+  //     e.preventDefault();
 
-      var data = {};
-      $.each(formData, function (i, field) {
-        data[field.name] = field.value;
-      });
+  //     var formData = $(this).serializeArray();
+  //     formData.push({ name: "form-name", value: "contact" });
 
-      $.ajax({
-        type: "POST",
-        url: "/", // Netlify captures form submissions at root
-        data: $.param(data),
-        success: function () {
-          var alertBox =
-            '<div class="alert alert-success alert-dismissable">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-            "Your message has been sent!" +
-            "</div>";
-          $("#contact-form").find(".messages").html(alertBox);
-          $("#contact-form")[0].reset();
-        },
-        error: function () {
-          var alertBox =
-            '<div class="alert alert-danger alert-dismissable">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
-            "Oops! There was a problem submitting your form." +
-            "</div>";
-          $("#contact-form").find(".messages").html(alertBox);
-        },
-      });
+  //     var data = {};
+  //     $.each(formData, function (i, field) {
+  //       data[field.name] = field.value;
+  //     });
 
-      return false;
-    }
-  });
+  //     $.ajax({
+  //       type: "POST",
+  //       url: "/",
+  //       data: $.param(data),
+  //       success: function () {
+  //         var alertBox =
+  //           '<div class="alert alert-success alert-dismissable">' +
+  //           '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+  //           "Your message has been sent!" +
+  //           "</div>";
+  //         $("#contact-form").find(".messages").html(alertBox);
+  //         $("#contact-form")[0].reset();
+  //       },
+  //       error: function () {
+  //         var alertBox =
+  //           '<div class="alert alert-danger alert-dismissable">' +
+  //           '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+  //           "Oops! There was a problem submitting your form." +
+  //           "</div>";
+  //         $("#contact-form").find(".messages").html(alertBox);
+  //       },
+  //     });
+
+  //     return false;
+  //   }
+  // });
 });
+
+/* =================={  AJAX(fectch) perfect for Netlify  }=================== */
+
+const handleSubmit = (event) => {
+  event.preventDefault();
+  const myForm = event.target;
+  const formData = new FormData(myForm);
+
+  fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(formData).toString(),
+  })
+    .then(() => {
+      // Display success message in your page instead of alert
+      document.querySelector(".messages").innerHTML =
+        "<p>Message sent successfully!</p>";
+      myForm.reset(); // clear the form
+    })
+    .catch((error) => {
+      // Display error message in your page instead of alert
+      document.querySelector(".messages").innerHTML =
+        "<p>There was a problem submitting your Message!!!</p>";
+    });
+};
+
+document
+  .querySelector("form[name='contact']")
+  .addEventListener("submit", handleSubmit);
 
 /* =============================================================================
 -----------------------------  Button scroll up   ------------------------------
