@@ -880,6 +880,11 @@ $(window).on("load", function () {
 });
 
 /* =================={  AJAX(fectch) perfect for Netlify  }=================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector("form[name='contact']");
+  if (!form) return;
+  form.addEventListener("submit", handleSubmit);
+});
 
 const handleSubmit = (event) => {
   event.preventDefault();
@@ -908,12 +913,9 @@ const handleSubmit = (event) => {
     });
 };
 
-document
-  .querySelector("form[name='contact']")
-  .addEventListener("submit", handleSubmit);
-
 function showAlert(title, message, type = "success") {
   const messagesDiv = document.querySelector(".messages");
+  if (!messagesDiv) return;
 
   const box = document.createElement("div");
   box.className = `alert-box alert-${type}`;
