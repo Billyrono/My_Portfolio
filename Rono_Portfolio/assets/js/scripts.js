@@ -892,21 +892,50 @@ const handleSubmit = (event) => {
     body: new URLSearchParams(formData).toString(),
   })
     .then(() => {
-      // Display success message in your page instead of alert
-      document.querySelector(".messages").innerHTML =
-        "<p>Message sent successfully!</p>";
-      myForm.reset(); // clear the form
+      showAlert(
+        "Message Sent",
+        "Your message has been delivered successfully.",
+        "success"
+      );
+      myForm.reset();
     })
-    .catch((error) => {
-      // Display error message in your page instead of alert
-      document.querySelector(".messages").innerHTML =
-        "<p>There was a problem submitting your Message!!!</p>";
+    .catch(() => {
+      showAlert(
+        "Submission Failed",
+        "There was a problem sending your message.",
+        "error"
+      );
     });
 };
 
 document
   .querySelector("form[name='contact']")
   .addEventListener("submit", handleSubmit);
+
+function showAlert(title, message, type = "success") {
+  const messagesDiv = document.querySelector(".messages");
+
+  const box = document.createElement("div");
+  box.className = `alert-box alert-${type}`;
+
+  const icon = type === "success" ? "✔️" : "⚠️";
+
+  box.innerHTML = `
+    <div class="alert-icon">${icon}</div>
+    <div>
+      <div class="alert-title">${title}</div>
+      <div class="alert-desc">${message}</div>
+    </div>
+  `;
+
+  messagesDiv.appendChild(box);
+
+  setTimeout(() => {
+    box.style.opacity = "0";
+    box.style.transition = "opacity 0.3s ease";
+    setTimeout(() => box.remove(), 300);
+  }, 4000);
+}
 
 /* =============================================================================
 -----------------------------  Button scroll up   ------------------------------
